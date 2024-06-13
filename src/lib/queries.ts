@@ -814,6 +814,7 @@ export const getFunnels = async (subacountId: string) => {
 }
 
 export const getFunnel = async (funnelId: string) => {
+  console.log('here : funnelId',funnelId)
   const funnel = await db.funnel.findUnique({
     where: { id: funnelId },
     include: {
@@ -886,6 +887,8 @@ export const getFunnelPageDetails = async (funnelPageId: string) => {
 }
 
 export const getDomainContent = async (subDomainName: string) => {
+  console.log('here : subDomainName',subDomainName)
+
   const response = await db.funnel.findUnique({
     where: {
       subDomainName,
