@@ -1,28 +1,28 @@
-'use client'
-import LaneForm from '@/components/forms/lane-form'
-import CustomModal from '@/components/global/custom-modal'
-import { Button } from '@/components/ui/button'
+"use client";
+import LaneForm from "@/components/forms/lane-form";
+import CustomModal from "@/components/global/custom-modal";
+import { Button } from "@/components/ui/button";
 import {
   LaneDetail,
   PipelineDetailsWithLanesCardsTagsTickets,
   TicketAndTags,
-} from '@/lib/types'
-import { useModal } from '@/providers/modal-provider'
-import { Lane, Ticket } from '@prisma/client'
-import { Flag, Plus } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
-import { DragDropContext, DropResult, Droppable } from 'react-beautiful-dnd'
-import PipelineLane from './pipeline-lane'
+} from "@/lib/types";
+import { useModal } from "@/providers/modal-provider";
+import { Lane, Ticket } from "@prisma/client";
+import { Flag, Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
+import PipelineLane from "./pipeline-lane";
 
 type Props = {
-  lanes: LaneDetail[]
-  pipelineId: string
-  subaccountId: string
-  pipelineDetails: PipelineDetailsWithLanesCardsTagsTickets
-  updateLanesOrder: (lanes: Lane[]) => Promise<void>
-  updateTicketsOrder: (tickets: Ticket[]) => Promise<void>
-}
+  lanes: LaneDetail[];
+  pipelineId: string;
+  subaccountId: string;
+  pipelineDetails: PipelineDetailsWithLanesCardsTagsTickets;
+  updateLanesOrder: (lanes: Lane[]) => Promise<void>;
+  updateTicketsOrder: (tickets: Ticket[]) => Promise<void>;
+};
 
 const PipelineView = ({
   lanes,
@@ -32,21 +32,21 @@ const PipelineView = ({
   updateLanesOrder,
   updateTicketsOrder,
 }: Props) => {
-  const { setOpen } = useModal()
-  const router = useRouter()
-  const [allLanes, setAllLanes] = useState<LaneDetail[]>([])
+  const { setOpen } = useModal();
+  const router = useRouter();
+  const [allLanes, setAllLanes] = useState<LaneDetail[]>([]);
 
   useEffect(() => {
-    setAllLanes(lanes)
-  }, [lanes])
+    setAllLanes(lanes);
+  }, [lanes]);
 
-  const ticketsFromAllLanes: TicketAndTags[] = []
+  const ticketsFromAllLanes: TicketAndTags[] = [];
   lanes.forEach((item) => {
     item.Tickets.forEach((i) => {
-      ticketsFromAllLanes.push(i)
-    })
-  })
-  const [allTickets, setAllTickets] = useState(ticketsFromAllLanes)
+      ticketsFromAllLanes.push(i);
+    });
+  });
+  const [allTickets, setAllTickets] = useState(ticketsFromAllLanes);
 
   const handleAddLane = () => {
     setOpen(
@@ -56,44 +56,44 @@ const PipelineView = ({
       >
         <LaneForm pipelineId={pipelineId} />
       </CustomModal>
-    )
-  }
+    );
+  };
 
   const onDragEnd = (dropResult: DropResult) => {
-    console.log(dropResult)
-    const { destination, source, type } = dropResult
+    console.log(dropResult);
+    const { destination, source, type } = dropResult;
     if (
       !destination ||
       (destination.droppableId === source.droppableId &&
         destination.index === source.index)
     ) {
-      return
+      return;
     }
 
     switch (type) {
-      case 'lane': {
+      case "lane": {
         const newLanes = [...allLanes]
           .toSpliced(source.index, 1)
           .toSpliced(destination.index, 0, allLanes[source.index])
           .map((lane, idx) => {
-            return { ...lane, order: idx }
-          })
+            return { ...lane, order: idx };
+          });
 
-        setAllLanes(newLanes)
-        updateLanesOrder(newLanes)
+        setAllLanes(newLanes);
+        updateLanesOrder(newLanes);
       }
 
-      case 'ticket': {
-        let newLanes = [...allLanes]
+      case "ticket": {
+        let newLanes = [...allLanes];
         const originLane = newLanes.find(
           (lane) => lane.id === source.droppableId
-        )
+        );
         const destinationLane = newLanes.find(
           (lane) => lane.id === destination.droppableId
-        )
+        );
 
         if (!originLane || !destinationLane) {
-          return
+          return;
         }
 
         if (source.droppableId === destination.droppableId) {
@@ -101,47 +101,44 @@ const PipelineView = ({
             .toSpliced(source.index, 1)
             .toSpliced(destination.index, 0, originLane.Tickets[source.index])
             .map((item, idx) => {
-              return { ...item, order: idx }
-            })
-          originLane.Tickets = newOrderedTickets
-          setAllLanes(newLanes)
-          updateTicketsOrder(newOrderedTickets)
-          router.refresh()
+              return { ...item, order: idx };
+            });
+          originLane.Tickets = newOrderedTickets;
+          setAllLanes(newLanes);
+          updateTicketsOrder(newOrderedTickets);
+          router.refresh();
         } else {
-          const [currentTicket] = originLane.Tickets.splice(source.index, 1)
+          const [currentTicket] = originLane.Tickets.splice(source.index, 1);
 
           originLane.Tickets.forEach((ticket, idx) => {
-            ticket.order = idx
-          })
+            ticket.order = idx;
+          });
 
           destinationLane.Tickets.splice(destination.index, 0, {
             ...currentTicket,
             laneId: destination.droppableId,
-          })
+          });
 
           destinationLane.Tickets.forEach((ticket, idx) => {
-            ticket.order = idx
-          })
-          setAllLanes(newLanes)
+            ticket.order = idx;
+          });
+          setAllLanes(newLanes);
           updateTicketsOrder([
             ...destinationLane.Tickets,
             ...originLane.Tickets,
-          ])
-          router.refresh()
+          ]);
+          router.refresh();
         }
       }
     }
-  }
+  };
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div className="bg-white/60 dark:bg-background/60 rounded-xl p-4 use-automation-zoom-in">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl">{pipelineDetails?.name}</h1>
-          <Button
-            className="flex items-center gap-4"
-            onClick={handleAddLane}
-          >
+          <Button className="flex items-center gap-4" onClick={handleAddLane}>
             <Plus size={15} />
             Create Lane
           </Button>
@@ -154,7 +151,7 @@ const PipelineView = ({
         >
           {(provided) => (
             <div
-              className="flex item-center gap-x-2 overflow-scroll"
+              className="flex item-center gap-x-2 overflow-auto"
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
@@ -189,7 +186,7 @@ const PipelineView = ({
         )}
       </div>
     </DragDropContext>
-  )
-}
+  );
+};
 
-export default PipelineView
+export default PipelineView;
