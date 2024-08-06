@@ -2,7 +2,7 @@
 
 Saas website builder, Project Management, Software as a service, Dashboard, Admin Panel, User account and management, Stripe Connect, Prisma, Tailwind, NextJS 14, Database
 
-## SaaS Notion Clone with Realtime cursors, Nextjs 13, Stripe, Drizzle ORM, Tailwind, Supabase, Sockets
+## SaaS App with Nextjs 14, Stripe, ORM, Tailwind, Supabase, Sockets, Shadcn, Framer motion
 
 [Hire SAAS Developer](https://avinyaweb.com)
 
