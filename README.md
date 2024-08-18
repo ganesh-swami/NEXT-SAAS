@@ -12,10 +12,6 @@ Hire the Developer if you want to get your website designed and developed!
 FREE access Limited spots only!!!
 [Hire Ecommerce Developer](https://avinyaweb.com)
 
-## Get all the help you need
-
-Share all bugs and solutions in the discord. Would love to collaborate and get to know talented developers like yourself.
-[Discord](https://discord.gg/GG4wJkxh)
 
 ### Features in this application.
 
