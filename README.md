@@ -4,13 +4,13 @@ Saas website builder, Project Management, Software as a service, Dashboard, Admi
 
 ## SaaS App with Nextjs 14, Stripe, ORM, Tailwind, Supabase, Sockets, Shadcn, Framer motion
 
-[Hire SAAS Developer](https://avinyaweb.com)
+<!-- [Hire SAAS Developer](https://avinyaweb.com) -->
 
 ## ✨ Private Web design / development
 
 Hire the Developer if you want to get your website designed and developed!
-FREE access Limited spots only!!!
-[Hire Ecommerce Developer](https://avinyaweb.com)
+
+<!--  [Hire Ecommerce Developer](https://avinyaweb.com) -->
 
 
 ### Features in this application.
